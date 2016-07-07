@@ -15,9 +15,14 @@ namespace ImageCompare
     {
         static void Main(string[] args)
         {
-            AllImages s = new AllImages();
-            s.Method(args);
-            
+            ImageActions s = new ImageActions();
+            var g = s.ProcessFiles(args);
+            var d = s.RemoveDuplicates(g);
+            foreach (var item in d)
+            {
+                s.CreateDirectoriesMoveFiles(item);
+            }
+
             Console.WriteLine("Changed");
             Console.ReadLine();
         }

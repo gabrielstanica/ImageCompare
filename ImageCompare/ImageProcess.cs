@@ -1,18 +1,18 @@
-﻿using System;
+﻿using ImageCompare.Interface;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageCompare
 {
-    class AllImages
+    class ImageProcess : IImageProcess
     {
-        public string CopyImagePath
+        private string CopyImagePath
         {
             get
             {
@@ -72,60 +72,26 @@ namespace ImageCompare
                     Console.WriteLine(secondImage.ImagePath);
                     Console.WriteLine("----------------------");
 
-
                     if (!new DirectoryInfo(CopyImagePath).Exists)
                     {
                         Directory.CreateDirectory(CopyImagePath);
                     }
+
                     Console.WriteLine(String.Format("Moved image {0}", firstImage.ImagePath));
+                    Console.WriteLine(String.Format("Moved image {0}", secondImage.ImagePath));
                     Console.WriteLine("----------------------");
-                    var imageName = String.Format("{1}{2}{3}_{0}", firstImage.ImageName, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                    File.Move(firstImage.ImagePath, Path.Combine(CopyImagePath, imageName));
+                    var currentDate = DateTime.Now;
+                    var firstImageName = String.Format("{0}_{1}{2}{3}{4}", firstImage.ImageName, currentDate.Hour, currentDate.Minute, currentDate.Second, currentDate.Millisecond);
+                    var secondImageName = String.Format("{0}_{1}{2}{3}{4}Copy", secondImage.ImageName, currentDate.Hour, currentDate.Minute, currentDate.Second, currentDate.Millisecond);
+
+                    File.Move(firstImage.ImagePath, Path.Combine(CopyImagePath, firstImageName));
+                    File.Copy(secondImage.ImagePath, Path.Combine(CopyImagePath, secondImageName));
                     //File.Delete(firstImage.ImagePath);
                     firstImage.ToDelete = true;
                     return true;
                 }
             }
             return false;
-        }
-
-        public void Method(string[] path)
-        {
-            List<List<ImageProperties>> listOfImages = new List<List<ImageProperties>>();
-            List<ImageProperties> temList = new List<ImageProperties>();
-            List<List<string>> imageFiles = new List<List<string>>();
-
-            List<string[]> allFiles = new List<string[]>();
-            allFiles = GetDirectories(path);
-
-            foreach (var directory in allFiles)
-            {
-                imageFiles.Add(GetImages(directory));
-            }
-
-            foreach (var file in imageFiles)
-            {
-                Console.WriteLine(String.Format("Total images to be processed {0}", file.Count));
-                for (int i = 0; i < file.Count; i++)
-                {
-                    Console.Write("\rImage {0}/{1} ", i + 1, file.Count);
-                    //Console.WriteLine(String.Format("Image {0} processed", i));
-                    temList.Add(new ImageProperties(file[i]));
-                }
-
-                for (int i = 0; i < temList.Count - 1; i++)
-                {
-                    for (int j = i + 1; j < temList.Count; j++)
-                    {
-                        var found = CompareTwoImages(temList[i], temList[j]);
-                        if (found)
-                        {
-                            break;
-                        }
-                    }
-                }
-                listOfImages.Add(temList);
-            }
         }
     }
 }

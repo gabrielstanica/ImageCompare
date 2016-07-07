@@ -32,7 +32,7 @@ namespace ImageCompare
                 }
                 catch (Exception ex)
                 {
-                    Console.Write("\rCreation date couldn't be taken, falling back to modified date");
+                    Console.Write("\r  Creation date couldn't be taken, falling back to modified date");
                     //Console.WriteLine("Creation date couldn't be taken, falling back to modified date");
                     CreationDate = File.GetLastWriteTime(ImagePath);
                 }
@@ -51,11 +51,5 @@ namespace ImageCompare
             Array.Clear(imageArray, 0, imageArray.Length);
             //Base64 = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(imagePath));
         }
-
-        //~ImageProperties()
-        //{
-        //    Console.WriteLine("~DisposeImageProperties()");
-        //}
-
     }
 }

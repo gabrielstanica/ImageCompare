@@ -45,8 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllImages.cs" />
+    <Compile Include="ImageActions.cs" />
+    <Compile Include="ImageProcess.cs" />
     <Compile Include="ImageProperties.cs" />
+    <Compile Include="Interface\IImageActions.cs" />
+    <Compile Include="Interface\IImageProcess.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
