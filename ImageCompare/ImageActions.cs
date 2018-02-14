@@ -2,6 +2,7 @@ using ImageCompare.Interface;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -89,7 +90,7 @@ namespace ImageCompare
                 if (!image.ToDelete)
                 {
                     // https://csharp.today/log4net-tutorial-great-library-for-logging/
-                    var directoryDate = String.Format("{0}.{1}", image.CreationDate.Year, image.CreationDate.Month);
+                    var directoryDate = String.Format("{0}.{1}", image.CreationDate.Year, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(image.CreationDate.Month));
                     var newImagesPath = Path.Combine(NewPath, directoryDate);
                     if (!Directory.Exists(newImagesPath))
                     {
