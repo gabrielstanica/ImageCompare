@@ -1,4 +1,4 @@
-﻿using ImageCompare.Interface;
+using ImageCompare.Interface;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
