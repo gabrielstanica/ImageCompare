@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -23,24 +23,39 @@ namespace ImageCompare
         {
             this.ImagePath = imagePath;
             Regex r = new Regex(":");
-
-            using (Image image = Image.FromFile(imagePath))
+            while (true)
             {
                 try
                 {
-                    CreationDate = DateTime.Parse(r.Replace(Encoding.UTF8.GetString(image.GetPropertyItem(36867).Value), "-", 2));
+                    using (Image image = Image.FromFile(imagePath))
+                    {
+                        try
+                        {
+                            CreationDate = DateTime.Parse(r.Replace(Encoding.UTF8.GetString(image.GetPropertyItem(36867).Value), "-", 2));
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Write("\r  Creation date couldn't be taken, falling back to modified date");
+                            //Console.WriteLine("Creation date couldn't be taken, falling back to modified date");
+                            CreationDate = File.GetLastWriteTime(ImagePath);
+                        }
+                        Resolution = image.Size;
+                        FileInfo details = new FileInfo(ImagePath);
+                        Size = details.Length;
+                        ImageName = details.Name;
+                        image.Dispose();
+                    }
+                    break;
+                }
+                catch (OutOfMemoryException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    break;
                 }
                 catch (Exception ex)
                 {
-                    Console.Write("\r  Creation date couldn't be taken, falling back to modified date");
-                    //Console.WriteLine("Creation date couldn't be taken, falling back to modified date");
-                    CreationDate = File.GetLastWriteTime(ImagePath);
+                    Console.WriteLine(ex.Message);
                 }
-                Resolution = image.Size;
-                FileInfo details = new FileInfo(ImagePath);
-                Size = details.Length;
-                ImageName = details.Name;
-                image.Dispose();
             }
         }
 
